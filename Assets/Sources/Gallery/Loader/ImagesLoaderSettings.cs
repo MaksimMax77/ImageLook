@@ -1,3 +1,4 @@
+using Sources.Gallery.Container;
 using UnityEngine;
 
 namespace Sources.Gallery.Loader
@@ -7,8 +8,10 @@ namespace Sources.Gallery.Loader
     {
         [SerializeField] private string _url = "http://data.ikppbb.com/test-task-unity-data/pics/";
         [SerializeField] private int _amountImages = 66;
+        [SerializeField] private ImageContainer _imageContainer;
 
         public string URL => _url;
         public int AmountImages => _amountImages;
+        public ImageContainer ImageContainer => _imageContainer;
     }
 }

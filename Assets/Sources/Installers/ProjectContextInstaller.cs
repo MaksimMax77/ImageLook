@@ -1,6 +1,7 @@
 using Sources.FSM;
 using Sources.FSM.States;
 using Sources.Gallery;
+using Sources.Gallery.Loader;
 using Sources.System.Input;
 using Sources.System.Update;
 using Sources.Windows;
@@ -13,9 +14,11 @@ namespace Sources.Installers
     {
         [SerializeField] private WindowsManager _windowsManager;
         [SerializeField] private UpdateManager _updateManager;
+        [SerializeField] private ImagesLoaderSettings _imagesLoaderSettings;
 
         public override void InstallBindings()
         {
+            Container.Bind<ImagesLoaderSettings>().FromInstance(_imagesLoaderSettings).AsSingle().NonLazy();
             Container.Bind<UpdateManager>().FromInstance(_updateManager).AsSingle().NonLazy();
             Container.Bind<InputControl>().AsSingle().NonLazy();
             Container.Bind<WindowsManager>().FromInstance(_windowsManager).AsSingle().NonLazy();

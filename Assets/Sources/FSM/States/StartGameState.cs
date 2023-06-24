@@ -8,7 +8,6 @@ namespace Sources.FSM.States
     public class StartGameState: State
     {
         private GameStartWindow _createdWindow;
-
         private WindowsManager _windowsManager;
         
         [Inject]

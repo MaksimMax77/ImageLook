@@ -70,7 +70,7 @@ namespace Sources.FSM
             var state = _states2[index];
             EnterInState(typeof(LoadState), state.GetType());
         }
-
+        
         private State GetStateByType(Type type)
         {
             State state = null;
@@ -82,7 +82,6 @@ namespace Sources.FSM
                     state = _states2[i];
                 }
             }
-
             return state;
         }
     }

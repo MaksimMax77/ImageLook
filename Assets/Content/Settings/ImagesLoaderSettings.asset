@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: ImagesLoaderSettings
   m_EditorClassIdentifier: 
   _url: http://data.ikppbb.com/test-task-unity-data/pics/
-  imageContainerPrefab: {fileID: 4423873813447395837, guid: 38bc56ea011808b4db26aa651453a380, type: 3}
   _amountImages: 66
+  _imageContainer: {fileID: 4423873813447395837, guid: 38bc56ea011808b4db26aa651453a380, type: 3}

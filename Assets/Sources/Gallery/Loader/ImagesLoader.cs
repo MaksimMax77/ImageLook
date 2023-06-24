@@ -1,33 +1,39 @@
+using System;
 using System.Threading.Tasks;
 using Sources.Gallery.Container;
 using Sources.Windows;
 using UnityEngine;
 using UnityEngine.Networking;
-using Zenject;
+using Object = UnityEngine.Object;
 
 namespace Sources.Gallery.Loader
 {
-    public class ImagesLoader
+    public class ImagesLoader: IDisposable
     {
         private string _url;
         private ImageContainer _imageContainerPrefab;
         private int _amountImages;
         private Transform _imagesParent;
-        private ImageContainersClickHandler _imagesEventSubscriber;
-
-        [Inject]
-        public void Init(GalleryWindow galleryWindow, ImagesLoaderSettings imagesLoaderSettings,
-            ImageContainersClickHandler imagesEventSubscriber, ImageContainer imageContainer)
+        private Action<Texture> _changeState;
+        private ImageContainersClickHandler _imageContainersClickHandler;
+    
+        public ImagesLoader(ImagesLoaderSettings imagesLoaderSettings, GalleryWindow galleryWindow, Action<Texture> changeState)
         {
-            _imageContainerPrefab = imageContainer;
             _url = imagesLoaderSettings.URL;
             _amountImages = imagesLoaderSettings.AmountImages;
+            _imageContainerPrefab = imagesLoaderSettings.ImageContainer;
             _imagesParent = galleryWindow.ContentTransform;
-            _imagesEventSubscriber = imagesEventSubscriber;
-            CreateImages();
+            _changeState = changeState;
+            _imageContainersClickHandler = new ImageContainersClickHandler();
+            _imageContainersClickHandler.ImageClicked += OnImageClick;
         }
 
-        private async void CreateImages()
+        private void OnImageClick(Texture texture)
+        {
+            _changeState?.Invoke(texture);
+        }
+
+        public async void CreateImages()
         {
             for (var i = 0; i < _amountImages; ++i)
             {
@@ -38,11 +44,17 @@ namespace Sources.Gallery.Loader
                     return;
                 }
                 var obj = Object.Instantiate(_imageContainerPrefab, _imagesParent);
-                _imagesEventSubscriber.Add(obj);
+                _imageContainersClickHandler.Add(obj);
                 obj.SetTexture(texture);
             }
         }
-
+        
+        public void Dispose()
+        {
+            _imageContainersClickHandler.ImageClicked -= OnImageClick;
+            _imageContainersClickHandler?.Dispose();
+        }
+        
         private static async Task<Texture2D> GetRemoteTexture(string url, int index)
         {
             using var www = UnityWebRequestTexture.GetTexture(url + index + ".jpg");
@@ -62,4 +74,3 @@ namespace Sources.Gallery.Loader
         }
     }
 }
- 

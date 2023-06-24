@@ -78,6 +78,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _windowsManager: {fileID: -5505847529450172890}
   _updateManager: {fileID: -4542198667652435213}
+  _imagesLoaderSettings: {fileID: 11400000, guid: 98eafa5efdf84a64f903cb3423aca71d, type: 2}
 --- !u!114 &-5505847529450172890
 MonoBehaviour:
   m_ObjectHideFlags: 0
