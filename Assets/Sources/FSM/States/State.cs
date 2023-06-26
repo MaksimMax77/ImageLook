@@ -1,19 +1,20 @@
-using System;
+using Sources.FSM.Transitions;
 
 namespace Sources.FSM.States
 {
     public abstract class State
     {
         protected SceneStateMachine _sceneStateMachine;
-        protected Type _nextStateType;
-        public Type NextState => _nextStateType;
+        private Transition _transition;
+        public Transition Transition => _transition;
+
+        public void SetTransition(Transition transition)
+        {
+            _transition = transition;
+        }
         public void SetStateMachine(SceneStateMachine stateMachine)
         {
             _sceneStateMachine = stateMachine;
-        }
-        public void SetNextState(Type nextStateType)
-        {
-            _nextStateType = nextStateType;
         }
         public abstract void OnEnter();
 

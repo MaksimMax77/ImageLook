@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Sources.FSM.States;
+using Sources.FSM.Transitions;
 using Sources.System.Input;
 using Zenject;
 
@@ -8,29 +9,33 @@ namespace Sources.FSM
 {
     public class SceneStateMachine : IDisposable
     {
-        private List<State> _states2;
+        private List<State> _states;
         private State _currentState;
         private InputControl _inputControl;
         
         [Inject]
-        public void Init(LoadState loadState, StartGameState startGameState,
+        public void Init(LoadTransition loadTransition, StartGameState startGameState,
             GalleryState galleryState, ImageViewState imageViewState, InputControl inputControl)
         {
-            _states2 = new List<State>()
+            _states = new List<State>()
             {
-                loadState,
                 startGameState,
                 galleryState,
                 imageViewState
             };
 
+            for (int i = 0, len = _states.Count; i < len; ++i)
+            {
+                _states[i].SetTransition(loadTransition);
+            }
+            
             _inputControl = inputControl;
             SetStateMachine();
             _inputControl.EscapeClicked += OnEscapeClicked;
             EnterInState(typeof(StartGameState));
         }
         
-        public void EnterInState(Type stateType, Type nextStateType = null) 
+        public void EnterInState(Type stateType) 
         {
             var state = GetStateByType(stateType);
 
@@ -39,10 +44,12 @@ namespace Sources.FSM
                 return;
             }
             
-            state.SetNextState(nextStateType);
             _currentState?.OnExit();
             _currentState = state;
-            _currentState.OnEnter();
+            _currentState.Transition.Execute(() =>
+            {
+                _currentState.OnEnter();
+            });
         }
         
         public void Dispose()
@@ -51,35 +58,35 @@ namespace Sources.FSM
         }
         private void SetStateMachine()
         {
-            for (int i = 0, len = _states2.Count; i < len; ++i)
+            for (int i = 0, len = _states.Count; i < len; ++i)
             {
-                _states2[i].SetStateMachine(this);
+                _states[i].SetStateMachine(this);
             }
         }
         
-        private void OnEscapeClicked()
+        public void OnEscapeClicked()
         {
-            var index = _states2.IndexOf(_currentState);
+            var index = _states.IndexOf(_currentState);
             --index;
             
-            if (index <= 0)
+            if (index < 0)
             {
                 return;
             }
             
-            var state = _states2[index];
-            EnterInState(typeof(LoadState), state.GetType());
+            var state = _states[index];
+            EnterInState(state.GetType());
         }
         
         private State GetStateByType(Type type)
         {
             State state = null;
             
-            for (int i = 0, len = _states2.Count; i < len; ++i)
+            for (int i = 0, len = _states.Count; i < len; ++i)
             {
-                if (type == _states2[i].GetType())
+                if (type == _states[i].GetType())
                 {
-                    state = _states2[i];
+                    state = _states[i];
                 }
             }
             return state;

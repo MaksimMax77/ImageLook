@@ -30,7 +30,7 @@ namespace Sources.FSM.States
 
         private void OnGameStarted()
         {
-            _sceneStateMachine.EnterInState(typeof(LoadState),typeof(GalleryState));
+            _sceneStateMachine.EnterInState(typeof(GalleryState));
         }
 
         private void OnSceneLoad(Scene scene, LoadSceneMode mode)

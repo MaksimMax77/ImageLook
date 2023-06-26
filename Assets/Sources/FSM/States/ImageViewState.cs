@@ -10,6 +10,7 @@ namespace Sources.FSM.States
     {
         private WindowsManager _windowsManager;
         private SelectedTexture _selectedTexture;
+        private ImageViewWindow _imageViewWindow;
         
         [Inject]
         public void Init(WindowsManager windowsManager, SelectedTexture selectedTexture)
@@ -26,12 +27,14 @@ namespace Sources.FSM.States
         public override void OnExit()
         {
             SceneManager.sceneLoaded -= OnSceneLoad;
+            _imageViewWindow.BackClicked -= _sceneStateMachine.OnEscapeClicked;
         }
 
         private void OnSceneLoad(Scene scene, LoadSceneMode mode)
         {
-            var window = Object.Instantiate(_windowsManager.ImageViewWindow);
-            window.SetTexture(_selectedTexture.Texture);
+            _imageViewWindow = Object.Instantiate(_windowsManager.ImageViewWindow);
+            _imageViewWindow.SetTexture(_selectedTexture.Texture);
+            _imageViewWindow.BackClicked += _sceneStateMachine.OnEscapeClicked;
         }
     }
 }

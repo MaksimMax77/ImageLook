@@ -1,5 +1,6 @@
 using Sources.FSM;
 using Sources.FSM.States;
+using Sources.FSM.Transitions;
 using Sources.Gallery;
 using Sources.Gallery.Loader;
 using Sources.System.Input;
@@ -28,7 +29,7 @@ namespace Sources.Installers
 
         private void InstallSceneStateMachine()
         {
-            Container.Bind<LoadState>().AsSingle().NonLazy();
+            Container.Bind<LoadTransition>().AsSingle().NonLazy();
             Container.Bind<StartGameState>().AsSingle().NonLazy();
             Container.Bind<GalleryState>().AsSingle().NonLazy();
             Container.Bind<ImageViewState>().AsSingle().NonLazy();

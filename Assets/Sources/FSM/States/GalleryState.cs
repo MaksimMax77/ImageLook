@@ -45,7 +45,7 @@ namespace Sources.FSM.States
         private void SetTextureSetImageViewState(Texture texture)
         {
             _selectedTexture.SetTexture(texture);
-            _sceneStateMachine.EnterInState(typeof(LoadState), typeof(ImageViewState));
+            _sceneStateMachine.EnterInState(typeof(ImageViewState));
         }
     }
 }
